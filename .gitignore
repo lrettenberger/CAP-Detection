@@ -1,0 +1,5 @@
+data/siemens_source/
+data/GE-15/
+.idea/
+.ipynb_checkpoints/
+*.pt
