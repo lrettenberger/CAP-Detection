@@ -26,8 +26,7 @@ class ToTensor(object):
 
     def __call__(self, image, target):
         image = F.to_tensor(image)
-        # image = image.permute(1, 2, 0)
-        target = torch.as_tensor(np.array(target) / 255., dtype=torch.int64)
+        target = torch.as_tensor(np.array(target), dtype=torch.int64)
         return image, target
 
 

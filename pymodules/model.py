@@ -41,7 +41,7 @@ class SegNet(nn.Module):
         self.decoder_convtr_01 = nn.Sequential(*[nn.ConvTranspose2d(in_channels=64, out_channels=64, kernel_size=3, padding=1), nn.BatchNorm2d(64)])
         self.decoder_convtr_00 = nn.Sequential(*[nn.ConvTranspose2d(in_channels=64, out_channels=self.output_channels, kernel_size=3, padding=1)])
 
-        self.double()
+        #self.double()
 
     def forward(self, input_img):
         # Encoder
@@ -109,6 +109,6 @@ class SegNet(nn.Module):
         x_01d = F.relu(self.decoder_convtr_01(x_0d))
         x_00d = self.decoder_convtr_00(x_01d)
 
-        # x_softmax = F.softmax(x_00d, dim=1)
+        x_softmax = F.softmax(x_00d, dim=1)
 
-        return x_00d  # , x_softmax
+        return x_softmax
