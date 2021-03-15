@@ -48,7 +48,6 @@ def weighted_cross_entropy(pred, gt):
         gt_frequencies = gt_frequencies / (sample_pred.shape[1] * sample_pred.shape[2])
         gt_frequencies = 1 - gt_frequencies
         class_scores = []
-        print(gt_frequencies)
         for clazz in range(sample_pred.shape[0]):
             class_pred = sample_pred[clazz]
             class_gt = sample_gt[clazz]
