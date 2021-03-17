@@ -1,6 +1,10 @@
 # CAP-Detection
 
 This project is far from finished. The Performance is not satisfactory.
+
+Visualization of training. The MRI image to segment is taken from the test set. Every epoch the segmentation is saved as a image. 
+...
+
 ## Possible further Approaches/Improvements
 
 - Right now only a small portion of the dataset is used. [data/siemens_reduced_normalized](data/siemens_reduced_normalized) is the used dataset, the whole dataset can be found in [data/siemens_full](data/siemens_full). When training the network with the full dataset it will converge to classify everything as background. This is because many samples contain no class at all. This information where the classes are _not_ located is important however. For further improvements the loss function (Dice loss) propbably needs to be adjusted. [Tversky Focal Loss](https://arxiv.org/abs/1810.07842) could be an promising approach (I tried it a bit already but it does not work quite well yet).  
