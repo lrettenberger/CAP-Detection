@@ -1,10 +1,26 @@
 from PIL import Image
 from skimage.exposure import equalize_adapthist
 from torch.fft import Tensor
-from torchvision.transforms import functional as F
 import torch
 import random
 import numpy as np
+from torchvision import transforms as T
+from torchvision.transforms import functional as F
+import torchvision
+
+
+def pad_circular(x, pad):
+    """
+    :param x: shape [H, W]
+    :param pad: int >= 0
+    :return:
+    """
+    x = torch.cat([x, x[0:pad]], dim=0)
+    x = torch.cat([x, x[:, 0:pad]], dim=1)
+    x = torch.cat([x[-2 * pad:-pad], x], dim=0)
+    x = torch.cat([x[:, -2 * pad:-pad], x], dim=1)
+
+    return x
 
 
 class EqualizeAdaptiveHistogramEqualization(object):
@@ -70,4 +86,41 @@ class Resize(object):
     def __call__(self, image, target):
         image = F.resize(image, self.size)
         target = F.resize(target, self.size, interpolation=Image.NEAREST)
+        return image, target
+
+
+class RandomGaussianNoise(object):
+
+    def __init__(self, noise_ammount):
+        self.noise_ammount = noise_ammount
+
+    def __call__(self, image, target):
+        return image + (torch.randn_like(image)*self.noise_ammount), target
+
+
+class RandomRotation(object):
+
+    def __init__(self, degrees):
+        self.degrees = degrees
+
+    def __call__(self, image, target):
+        rotation = T.RandomRotation.get_params([-self.degrees, self.degrees])
+        image = F.rotate(image, rotation)
+        target = F.rotate(target, rotation)
+        return image, target
+
+
+class RandomCrop(object):
+    '''
+    Source: https://github.com/pytorch/vision/tree/master/references/segmentation
+    '''
+
+    def __init__(self, crop_size):
+        self.crop_size = crop_size
+        self.padder = torch.nn.ReflectionPad2d(crop_size // 2)
+
+    def __call__(self, image, target):
+        crop_params = T.RandomCrop.get_params(image, (image.shape[1] - self.crop_size, image.shape[2] - self.crop_size))
+        image = self.padder((F.crop(image, *crop_params)).reshape(image.shape[0], 1, image.shape[1] - self.crop_size, image.shape[2] - self.crop_size))[:, 0, :, :]
+        target = self.padder((F.crop(target, *crop_params)).reshape(1, target.shape[0], target.shape[1] - self.crop_size, target.shape[2] - self.crop_size).double())[0].int()
         return image, target
