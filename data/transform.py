@@ -28,18 +28,18 @@ def convert_dicom_to_png(source, target):
 
 # Samples
 patient_number = 1
-patients = sorted(glob('siemens_source/Patient*'), key=lambda x: int(x.split('siemens_source\\Patient ')[1]))
+patients = sorted(glob('GE-15/Patient*'), key=lambda x: int(x.split('GE-15\\Patient ')[1]))
 for patient in patients:
     sample_number = 1
     images = sorted(glob(f'{patient}/T2W/*.dcm'), key=lambda x: int(x.split(f'{patient}/T2W\\image')[1].split('.dcm')[0]))
     for image in images:
-        convert_dicom_to_png(image, f'siemens_full/samples/{patient_number}_{sample_number}.png')
+        convert_dicom_to_png(image, f'GE-15_full/samples/{patient_number}_{sample_number}.png')
         sample_number += 1
     patient_number += 1
 
 # Labels
 patient_number = 1
-patients = sorted(glob('siemens_source/Patient*'), key=lambda x: int(x.split('siemens_source\\Patient ')[1]))
+patients = sorted(glob('GE-15/Patient*'), key=lambda x: int(x.split('GE-15\\Patient ')[1]))
 for patient in patients:
     sample_number = 1
     images = sorted(glob(f'{patient}/T2W/*.dcm'), key=lambda x: int(x.split(f'{patient}/T2W\\image')[1].split('.dcm')[0]))
@@ -47,7 +47,7 @@ for patient in patients:
     for index in indices:
         for clazz in ['cap', 'cg', 'prostate', 'pz']:
             cap_s = f'{patient}/GT/{clazz}/image{index}.dcm'
-            cap_d = f'siemens_full/labels/{clazz}/{patient_number}_{sample_number}.png'
+            cap_d = f'GE-15_full/labels/{clazz}/{patient_number}_{sample_number}.png'
             convert_dicom_to_png(cap_s, cap_d)
         sample_number += 1
     patient_number += 1

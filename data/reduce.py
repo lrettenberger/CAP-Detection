@@ -4,23 +4,24 @@ import imageio
 import matplotlib.pyplot as plt
 import PIL.Image
 
-cap = 'siemens_full/labels/cap'
-cg = 'siemens_full/labels/cg'
-prostate = 'siemens_full/labels/prostate'
-pz = 'siemens_full/labels/pz'
-sample = 'siemens_full/samples'
+cap = 'GE-15_full/labels/cap'
+cg = 'GE-15_full/labels/cg'
+prostate = 'GE-15_full/labels/prostate'
+pz = 'GE-15_full/labels/pz'
+sample = 'GE-15_full/samples'
 
-cap_d = 'siemens_reduced/labels/cap'
-cg_d = 'siemens_reduced/labels/cg'
-prostate_d = 'siemens_reduced/labels/prostate'
-pz_d = 'siemens_reduced/labels/pz'
-sample_d = 'siemens_reduced/samples'
+cap_d = 'GE-15_reduced/labels/cap'
+cg_d = 'GE-15_reduced/labels/cg'
+prostate_d = 'GE-15_reduced/labels/prostate'
+pz_d = 'GE-15_reduced/labels/pz'
+sample_d = 'GE-15_reduced/samples'
 
-sorted_patients = sorted(glob.glob('siemens_full/samples/*.png'), key=lambda x: list(int(i) for i in x.split('siemens_full/samples\\')[1].split('.png')[0].split('_')))
-names = [i.split('siemens_full/samples\\')[1] for i in sorted_patients]
+sorted_patients = sorted(glob.glob('GE-15_full/samples/*.png'), key=lambda x: list(int(i) for i in x.split('GE-15_full/samples\\')[1].split('.png')[0].split('_')))
+names = [i.split('GE-15_full/samples\\')[1] for i in sorted_patients]
 
 i=0
 for name in names:
+    print(name)
     cap_img = np.array(imageio.imread(f'{cap}/{name}'))
     cg_img = np.array(imageio.imread(f'{cg}/{name}'))
     prostate_img = np.array(imageio.imread(f'{prostate}/{name}'))
@@ -37,4 +38,3 @@ for name in names:
         PIL.Image.fromarray(prostate_img).save(f'{prostate_d}/{name}')
         PIL.Image.fromarray(pz_img).save(f'{pz_d}/{name}')
         PIL.Image.fromarray(sample_img).save(f'{sample_d}/{name}')
-        print()
